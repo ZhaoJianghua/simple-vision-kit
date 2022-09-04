@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "svkcore"
+version = "0.0.1"
+authors = [
+    { "name"="zjh",  email="zhaojianghua1990@qq.com" }
+]
+description = "A simple deep computer vision toolkit"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.6"
+dependencies = [
+    "pillow",
+    "opencv-python",
+    "numpy",
+    "lxml"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pypa/sampleproject"
+"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
