@@ -18,8 +18,9 @@ from io import BytesIO
 import pkg_resources
 from collections import defaultdict
 from typing import Callable
+import base64
 
-from PIL import ImageFont
+from PIL import ImageFont, Image
 
 DEFAULT_FONT_PATH = pkg_resources.resource_filename("svkcore", 'assets/DFPKingGothicGB-Light-2.ttf')
 
@@ -183,3 +184,31 @@ def collect_pascal_data(directory):
 
 
 bsn_head = basename_head
+
+
+def b64encode_image(image: Image.Image, format: str="JPEG") -> bytes:
+    """
+    Convert PIL.Image.Image object to bytes data use base64 encode
+    :param image: an instance of PIL.Image.Image
+    :param format: a string represents image encoding format.
+        could be "JPEG" or "PNG"
+    :return: base64 encoded image data
+    """
+    bio = BytesIO()
+    image.save(bio, format)
+    enc_dt = base64.b64encode(bio.getvalue())
+    del bio
+    return enc_dt
+
+
+def b64decode_image(data: bytes) -> Image.Image:
+    """
+    Decode bytes data of encoded image to an instance of PIL.Image.Image
+    :param data: base64 encoded bytes image data
+    :return: An instance of Image.Image represents the decode image
+    """
+    enc_dt = base64.b64decode(data)
+    bio = BytesIO(enc_dt)
+    image = Image.open(bio)
+    del bio
+    return image
