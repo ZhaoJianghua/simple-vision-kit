@@ -294,13 +294,30 @@ def cv2image2pil(cv2_image: np.ndarray) -> Image.Image:
     raise TypeError('cv2_image shape (%s) is invalid!' % cv2_image.shape)
 
 
+def pil2cv2image(image: Image.Image) -> np.ndarray:
+    """
+    Convert PIL.Image.Image to openCV format image
+    :param image: an instance of PIL.Image.Image
+    :return: converted openCV format image
+    """
+    cv2_image = np.asarray(image)
+    if cv2_image.ndim == 2:
+        return cv2_image
+    if cv2_image.ndim == 3 and cv2_image.shape[-1] == 3:
+        return cv2.cvtColor(cv2_image, cv2.COLOR_RGB2BGR)
+    if cv2_image.ndim == 3 and cv2_image.shape[-1] == 4:
+        return cv2.cvtColor(cv2_image, cv2.COLOR_RGBA2BGRA)
+    raise TypeError(f'image color format(f{image.mode}) is not support.')
+
+
 def images_gallery(image_list: Union[Tuple[Image.Image], List[Image.Image]],
                    n_cols: int = 6,
                    n_rows: int = None,
                    cell_size: Union[Tuple[int], List[int]] = (224, 224),
                    pad: int = 16,
                    align: int = 0,
-                   back_color: Union[Tuple[int], List[int], str] = "black") -> Image.Image:
+                   back_color: Union[Tuple[int], List[int], str] = "black",
+                   same_scale: bool = False) -> Image.Image:
     """ Paste a list of images into one panel for better visualize
 
     :param image_list: A list of Image.Image instance.
@@ -314,8 +331,12 @@ def images_gallery(image_list: Union[Tuple[Image.Image], List[Image.Image]],
            Default value is None.
     :param cell_size: The size of cell where each image is placed in.
     :param pad: The pad width/height between two cells.
-    :param align: The align mode. Set 0(center), 1(left/up), 2(right/bottom) to choose align mode in each cell.
+    :param align: The align mode. Set 0(center), 1(left/up), 2(right/bottom) to choose
+           align mode in each cell.
     :param back_color: Background color.
+    :param same_scale: A boolean value indicates whether to use a same scale factor
+           to resize all images in image_list. Set it to be True if you want to visualize
+           the sizes of different images.
     :return: Pasted Image.Image instance.
     """
     num = len(image_list)
@@ -336,8 +357,7 @@ def images_gallery(image_list: Union[Tuple[Image.Image], List[Image.Image]],
     assert align in (0, 1, 2), "Only support 0(center), 1(left/up), 2(right/bottom) align mode."
 
     # convert images + paint plan
-    cell_size_ws = [cell_size[0]] * n_cols
-    cell_size_hs = [cell_size[1]] * n_rows
+    factors = np.zeros(num)
     for i, img in enumerate(image_list):
         if isinstance(img, np.ndarray):
             img = cv2image2pil(img)
@@ -350,6 +370,18 @@ def images_gallery(image_list: Union[Tuple[Image.Image], List[Image.Image]],
             fac = cell_size[0] / img.size[0]
         else:
             fac = cell_size[1] / img.size[1]
+        factors[i] = fac
+        image_list[i] = img
+
+    # use same scale factor
+    if same_scale:
+        factors[...] = factors.min()
+
+    # resize images according to calculated scale factor
+    cell_size_ws = [cell_size[0]] * n_cols
+    cell_size_hs = [cell_size[1]] * n_rows
+    for i, img in enumerate(image_list):
+        fac = factors[i]
         nsz = [int(round(fac * x)) for x in img.size]
         img = img.resize(nsz)
         image_list[i] = img
