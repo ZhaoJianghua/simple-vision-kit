@@ -33,7 +33,7 @@ def points_distance(points0, points1, weights=(1., 1.)):
     return dist
 
 
-def ellipse_kernel(ksize, dtype=np.int):
+def ellipse_kernel(ksize, dtype=np.int32):
     """ Create ellipse kernel """
     assert len(ksize) == 2 and all(x > 0 for x in ksize)
 
@@ -46,7 +46,7 @@ def ellipse_kernel(ksize, dtype=np.int):
     return kernel
 
 
-def circle_kernel(diameter, dtype=np.int):
+def circle_kernel(diameter, dtype=np.int32):
     """ Create circel kernel """
     return ellipse_kernel([diameter, diameter], dtype)
 
