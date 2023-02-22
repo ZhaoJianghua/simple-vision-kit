@@ -10,7 +10,8 @@ r"""
 __all__ = ("str_md5", "image_md5", "get_default_font", "group",
            "basename_head", "bsn_head", "align_paths", "ifind_file_recursive",
            "find_file_recursive", "collect_examples", "collect_pascal_data",
-           "group_map", "find_files", "DEFAULT_FONT_PATH")
+           "group_map", "find_files", "DEFAULT_FONT_PATH",
+           "b64encode_image", "b64decode_image")
 
 import os
 import hashlib

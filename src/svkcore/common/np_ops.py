@@ -8,6 +8,9 @@ r"""
 Some common numpy operations
 """
 
+__all__ = ("ndarray_index", "points_distance", "ellipse_kernel", "circle_kernel",
+           "nms_mask", "generate_grid", "seg2point", "seg2line")
+
 import numpy as np
 import cv2
 

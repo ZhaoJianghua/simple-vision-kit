@@ -9,7 +9,8 @@ r"""
 
 __all__ = ["draw_points", "draw_lines", "draw_boxes", "draw_polygons", "draw_masks",
            "draw_texts", "draw_boxes_texts", "draw_detection_result", "generate_colors",
-           "draw_annotation", "DEFAULT_COLORS", "cv2image2pil", "images_gallery"]
+           "draw_annotation", "DEFAULT_COLORS", "cv2image2pil", "pil2cv2image",
+           "images_gallery"]
 
 import colorsys
 import math
