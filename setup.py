@@ -29,7 +29,7 @@ classifiers = [
 
 os.chdir(os.path.join(_PROJECT_ROOT, "src"))
 packages = find_packages(where="./")
-print("packages:", packages)
+
 setup(
     name="svkcore",
     version="0.0.3",
