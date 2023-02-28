@@ -10,7 +10,6 @@
 
 from setuptools import setup, find_packages
 import os
-import shutil
 
 
 _PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -27,8 +26,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-os.chdir(os.path.join(_PROJECT_ROOT, "src"))
-packages = find_packages(where="./")
+packages = find_packages(where="./src")
 
 setup(
     name="svkcore",
@@ -44,15 +42,10 @@ setup(
     license_files=["LICENSE"],
     python_requires=">=3.6",
     install_requires=install_requires,
+    package_dir={"": "./src"},
     exclude_package_data={'': ['README.*']},
     package_data={
         '': ['assets/DFPKingGothicGB-Light-2.ttf', 'requirements.txt'],
     }
 )
 
-if os.path.exists(os.path.join(_PROJECT_ROOT, "build")):
-    shutil.rmtree(os.path.join(_PROJECT_ROOT, "build"))
-shutil.move(os.path.join(_PROJECT_ROOT, "src", "build"), _PROJECT_ROOT)
-if os.path.exists(os.path.join(_PROJECT_ROOT, "dist")):
-    shutil.rmtree(os.path.join(_PROJECT_ROOT, "dist"))
-shutil.move(os.path.join(_PROJECT_ROOT, "src", "dist"), _PROJECT_ROOT)
