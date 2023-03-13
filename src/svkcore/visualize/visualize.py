@@ -207,7 +207,8 @@ def generate_colors(num):
     colors = list(map(lambda x: colorsys.hsv_to_rgb(*x), hsv_tuples))
     colors = list(map(lambda x: tuple(int(xx * 255) for xx in x), colors))
     np.random.seed(4)  # Fixed seed for consistent colors across runs.
-    np.random.shuffle(colors)  # Shuffle colors to decorrelate adjacent classes.
+    # Shuffle colors to decorrelate adjacent classes.
+    np.random.shuffle(colors)
     np.random.seed(None)  # Reset seed to default.
     return colors
 
@@ -242,7 +243,6 @@ DEFAULT_COLORS = tuple(generate_colors(99))
 def draw_annotation(image, annotation, name2cls, color_table=DEFAULT_COLORS,
                     add_unknown_name=False):
     """ Draw DTAnnotation to an image
-
     :param image: A PIL.Image object
     :param annotation: An instance of DTAnnotation
     :param name2cls: a dict of name to its class id number
@@ -282,7 +282,6 @@ def draw_annotation(image, annotation, name2cls, color_table=DEFAULT_COLORS,
 
 def cv2image2pil(cv2_image: np.ndarray) -> Image.Image:
     """ Convert openCV format image to PIL.Image.Image
-
     :param cv2_image: openCV format image instance
     :return: converted Image.Image instance
     """
@@ -354,8 +353,10 @@ def images_gallery(image_list: Union[Tuple[Image.Image], List[Image.Image]],
     if num < n_cols:
         n_cols = num
 
-    assert any(x > 0 for x in cell_size), "Set at least on value of cell_size(w, h)"
-    assert align in (0, 1, 2), "Only support 0(center), 1(left/up), 2(right/bottom) align mode."
+    assert any(
+        x > 0 for x in cell_size), "Set at least on value of cell_size(w, h)"
+    assert align in (
+        0, 1, 2), "Only support 0(center), 1(left/up), 2(right/bottom) align mode."
 
     # convert images + paint plan
     factors = np.zeros(num)
