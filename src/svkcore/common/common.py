@@ -84,13 +84,13 @@ def basename_head(path, sep=".", align_left=False):
 
 def align_paths(paths0, paths1, *args, sort=False, key_fn=None):
     """ Align paths base on its name head
-        This function will delete dis-matched paths with no promot.
-        Args:
-            paths0: the first of list file paths
-            paths1: the second of list file paths
-            args: others of list file paths
-            sort: sorted output by key
-            key_fn: extract align key function, default is `basename_head`
+    This function will delete dis-matched paths with no prompt.
+
+    :param paths0: the first of list file paths
+    :param paths1: the second of list file paths
+    :param args: others of list file paths
+    :param sort: sorted output by key
+    :param key_fn: extract align key function, default is `basename_head`
     """
     if key_fn is None:
         key_fn = basename_head
@@ -191,8 +191,7 @@ def b64encode_image(image: Image.Image, format: str="JPEG") -> bytes:
     """
     Convert PIL.Image.Image object to bytes data use base64 encode
     :param image: an instance of PIL.Image.Image
-    :param format: a string represents image encoding format.
-        could be "JPEG" or "PNG"
+    :param format: a string represents image encoding format. could be "JPEG" or "PNG"
     :return: base64 encoded image data
     """
     bio = BytesIO()
