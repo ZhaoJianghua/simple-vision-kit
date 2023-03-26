@@ -10,8 +10,9 @@ Welcome to svkcore's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules
-
+   get_start
+   svkcore
+   change_logs
 
 Indices and tables
 ==================

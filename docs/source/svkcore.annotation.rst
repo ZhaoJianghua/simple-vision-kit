@@ -1,22 +1,10 @@
-svkcore.annotation package
+svkcore.annotation
 ==========================
 
-Submodules
-----------
-
-svkcore.annotation.pascal module
+svkcore.annotation.pascal
 --------------------------------
 
 .. automodule:: svkcore.annotation.pascal
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: svkcore.annotation
     :members:
     :undoc-members:
     :show-inheritance:

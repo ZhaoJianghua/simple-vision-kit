@@ -1,22 +1,11 @@
-svkcore.visualize package
+svkcore.visualize
 =========================
 
-Submodules
-----------
-
-svkcore.visualize.visualize module
-----------------------------------
+svkcore.visualize.visualize
+-----------------------------
 
 .. automodule:: svkcore.visualize.visualize
     :members:
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: svkcore.visualize
-    :members:
-    :undoc-members:
-    :show-inheritance:

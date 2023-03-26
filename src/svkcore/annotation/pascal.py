@@ -17,23 +17,21 @@ from collections import defaultdict
 import shutil
 
 from lxml import etree
-import numpy as np
 
 from svkcore.shapes import *
 from svkcore.common import *
 
 
 def _recursive_parse_xml_to_dict(xml):
-    """Recursively parses XML contents to python dict.
+    """
+    Recursively parses XML contents to python dict.
 
     We assume that `object` and `point` tags are the only twos that can appear
     multiple times at the same level of a tree.
 
-    Args:
-      xml: xml tree obtained by parsing XML file contents using lxml.etree
-
-    Returns:
-      Python dictionary holding XML contents.
+    :param xml: xml tree obtained by parsing XML file contents using lxml.etree
+    :return: Python dictionary holding XML contents.
+    :rtype: dict
     """
     if xml is None:
         return {}
@@ -52,13 +50,11 @@ def _recursive_parse_xml_to_dict(xml):
 
 
 def _recursive_create_dict_to_xml(dct, root):
-    """Recursively create XML contents base on a python dict.
+    """
+    Recursively create XML contents base on a python dict.
 
-    Args:
-      dct: python dictionary holding XML contents
-      root: xml tree root where dict contents will append on.
-
-    Returns:
+    :param dct: python dictionary holding XML contents
+    :param root: xml tree root where dict contents will append on.
     """
     for key, val in dct.items():
         if isinstance(val, dict):
@@ -74,12 +70,13 @@ def _recursive_create_dict_to_xml(dct, root):
 
 
 def read_annotation(annotation_path):
-    """ Read object detection annotation of xml format file
+    """
+    Read object detection annotation of xml format file
     
-    Args:
-      annotation_path: file path of annotation
-
-    Returns: a dict of detection annotation
+    :param annotation_path: file path of annotation
+    :type annotation_path: str
+    :return: a dict of detection annotation
+    :rtype: dict
     """
     with open(annotation_path, 'rb') as f:
         xml_str = f.read()
@@ -89,13 +86,11 @@ def read_annotation(annotation_path):
 
 
 def write_annotation(annotation_path, annotation):
-    """ Write object detection annotation to a xml format file
+    """
+    Write object detection annotation to a xml format file
     
-    Args:
-      annotation_path: file path of annotation
-      annotation: a dict of detection annotation
-
-    Returns: 
+    :param annotation_path: file path of annotation
+    :param annotation: a dict of detection annotation
     """
     root = etree.Element("annotation")
     _recursive_create_dict_to_xml(annotation, root)  # write to file:
@@ -104,7 +99,9 @@ def write_annotation(annotation_path, annotation):
 
 
 class DTObject(object):
-    """ Detection object: base object for object detection """
+    """
+    Detection object: base object for object detection
+    """
 
     box_keys = ("xmin", "ymin", "xmax", "ymax")
 
@@ -121,6 +118,13 @@ class DTObject(object):
 
     @staticmethod
     def loadd(obj: dict):
+        """
+        Load DTObject from a dict
+
+        :param obj: a dict contains DTObject information
+        :return: loaded DTObject object
+        :rtype: DTObject
+        """
         bndbox, polygon = None, None
         if 'bndbox' in obj:
             bndbox = [int(round(float(obj['bndbox'][k]))) for k in DTObject.box_keys]
@@ -136,6 +140,12 @@ class DTObject(object):
                         bool(int(obj.get('difficult', 0))))
 
     def dumpd(self) -> dict:
+        """
+        Dump DTObject to a dict
+
+        :return: a dict contains DTObject information
+        :rtype: dict
+        """
         if self.bndbox is not None:
             bndbox = {k: int(v) for k, v in zip(DTObject.box_keys, self.bndbox)}
             key = "bndbox"
@@ -156,7 +166,9 @@ class DTObject(object):
 
 
 class DTAnnotation(object):
-    """ Detection Annotation: An annotation for object detection """
+    """
+    Detection Annotation: An annotation for object detection
+    """
 
     size_keys = ('width', 'height', 'depth')
 
@@ -170,6 +182,13 @@ class DTAnnotation(object):
 
     @staticmethod
     def loadd(obj: dict):
+        """
+        Load DTAnnotation from a dict
+
+        :param obj: a dict contains DTAnnotation information
+        :return: loaded DTAnnotation object
+        :rtype: DTAnnotation
+        """
         filename = obj.get('filename')
         size = obj.get('size', {})
         size = tuple(int(size[k]) for k in DTAnnotation.size_keys if k in size)
@@ -178,9 +197,22 @@ class DTAnnotation(object):
 
     @staticmethod
     def load(path: str):
+        """
+        Load DTAnnotation from a file
+
+        :param path: file path
+        :return: loaded DTAnnotation object
+        :rtype: DTAnnotation
+        """
         return DTAnnotation.loadd(read_annotation(path))
 
     def dumpd(self):
+        """
+        Dump DTAnnotation to a dict
+
+        :return: a dict contains DTAnnotation information
+        :rtype: dict
+        """
         size = dict(zip(DTAnnotation.size_keys, self.size))
         objects = [DTObject.dumpd(x) for x in self.objects]
         return {'filename': self.filename,
@@ -189,6 +221,12 @@ class DTAnnotation(object):
                 'object': objects}
 
     def dump(self, path):
+        """
+        Dump DTAnnotation to a file
+
+        :param path: dumped file path
+        :type path: str
+        """
         write_annotation(path, self.dumpd())
 
     def __str__(self):
@@ -202,11 +240,14 @@ class DTAnnotation(object):
 
 
 class DTDataset(object):
-    """ Detection dataset: A collection of annotations for object detection """
+    """
+    Detection dataset: A collection of annotations for object detection
+    """
 
     def __init__(self, annotations, images, categories):
         """
         Init dataset
+
         :param annotations: A list of DTAnnotation
         :param annotations: A list of image path
         :param categories: A list of {"id": 1, "name": "xxx", "supercategory": "none"}, id in [1, #categories]
@@ -219,6 +260,7 @@ class DTDataset(object):
     def load_coco(annotation_path, image_root):
         """
         Load coco format dataset
+
         :param annotation_path: json format annotation file path
         :param image_root: image root directory
         :return: DTDataset object
@@ -246,6 +288,7 @@ class DTDataset(object):
     def load_pascal(annotation_paths, image_paths):
         """
         Load pascal format dataset
+
         :param annotation_paths: a list of pascal format annotation file path
         :param image_paths: a list of image path respect with each annotation file
         :return: DTDataset object
@@ -270,6 +313,7 @@ class DTDataset(object):
     def dump_coco(self, path):
         """
         Save dataset to coco format
+
         :param path: coco format annotation path
         :return: None
         """
@@ -305,6 +349,7 @@ class DTDataset(object):
     def dump_pascal(self, annotation_dir):
         """
         Save dataset to pascal format
+
         :param annotation_dir: pascal format annotations directory
         :return: None
         """
@@ -316,6 +361,7 @@ class DTDataset(object):
     def dump_yolo(self, dataset_dir):
         """
         Save dataset to yolo format
+
         :param dataset_dir: yolo format dataset directory
         :return: None
         """

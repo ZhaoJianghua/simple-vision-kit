@@ -1,22 +1,11 @@
-svkcore.shapes package
+svkcore.shapes
 ======================
 
-Submodules
-----------
-
-svkcore.shapes.shapes module
-----------------------------
+svkcore.shapes.shapes
+----------------------
 
 .. automodule:: svkcore.shapes.shapes
     :members:
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: svkcore.shapes
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -16,7 +16,14 @@ import cv2
 
 
 def ndarray_index(shape):
-    """ Create np.ndarray index """
+    """
+    Create np.ndarray index
+
+    :param shape: index array shape
+    :type shape: Union[list, tuple]
+    :return: np.ndarray index
+    :rtype: np.ndarray
+    """
     idx = [np.arange(x) for x in shape]
     if len(idx) >= 2:
         idx[0], idx[1] = idx[1], idx[0]
@@ -27,7 +34,20 @@ def ndarray_index(shape):
 
 
 def points_distance(points0, points1, weights=(1., 1.)):
-    """ Calculate  distances between two point array """
+    """
+    Calculate distances between two point array
+
+    :param points0: a numpy array of shape (n, 2) representing the first set of points
+    :type points0: np.ndarray
+    :param points1: a numpy array of shape (m, 2) representing the second set of points
+    :type points1: np.ndarray
+    :param weights: a tuple of two floats representing the weights for the distance calculation
+                    along the vertical and horizontal axes
+    :type weights: tuple
+    :return: a numpy array of shape (n, m) representing the distances between each pair of
+             points from points0 and points1
+    :rtype: np.ndarray
+    """
     points0 = np.reshape(points0, [-1, 1, 2])
     points1 = np.reshape(points1, [1, -1, 2])
     dist = ((points0 - points1) * np.asarray(weights)) ** 2
@@ -37,7 +57,16 @@ def points_distance(points0, points1, weights=(1., 1.)):
 
 
 def ellipse_kernel(ksize, dtype=np.int32):
-    """ Create ellipse kernel """
+    """
+    Create ellipse kernel
+
+    :param ksize: kernel size, a tuple of (height, width)
+    :type ksize: tuple
+    :param dtype: data type of kernel
+    :type dtype: numpy.dtype, optional
+    :return: ellipse kernel
+    :rtype: numpy.ndarray
+    """
     assert len(ksize) == 2 and all(x > 0 for x in ksize)
 
     indexs = ndarray_index(ksize) + 0.5
@@ -50,11 +79,32 @@ def ellipse_kernel(ksize, dtype=np.int32):
 
 
 def circle_kernel(diameter, dtype=np.int32):
-    """ Create circel kernel """
+    """
+    Create circle kernel
+
+    :param diameter: diameter of the circle
+    :type diameter: int
+    :param dtype: data type of the kernel
+    :type dtype: numpy.dtype, optional
+    :return: circle kernel
+    :rtype: numpy.ndarray
+    """
     return ellipse_kernel([diameter, diameter], dtype)
 
 
 def nms_mask(seg, ksize=3, dtype=None):
+    """
+    Non-maximum suppression mask for segmentation
+
+    :param seg: segmentation result, probability map between [0.0, 1.0]
+    :type seg: np.ndarray
+    :param ksize: kernel size for max pooling
+    :type ksize: int
+    :param dtype: data type of output mask
+    :type dtype: np.dtype
+    :return: non-maximum suppression mask
+    :rtype: np.ndarray
+    """
     h, w = seg.shape
     offset = ksize // 2
     T = np.zeros([x + ksize for x in seg.shape], dtype=seg.dtype)
@@ -80,15 +130,23 @@ def generate_grid(panel_size,
                   overlap_size=None,
                   overlap_ratio=None,
                   allow_cross_boundary=False):
-    """ Generate grid for crop image patches
+    """
+    Generate grid for crop image patches
 
     :param panel_size: a tuple of image size (height, width)
+    :type panel_size: tuple
     :param grid_size: a tuple of grid size (grid_height, grid_width)
+    :type panel_size: tuple
     :param grid_num: a tuple of grid num (grid_rows, grid_column)
+    :type panel_size: tuple
     :param overlap_size: a tuple of overlap size
+    :type panel_size: tuple
     :param overlap_ratio: a tuple of grid overlap ratio
+    :type panel_size: tuple
     :param allow_cross_boundary: allow the last row or column position cross panel or not
+    :type panel_size: bool
     :return: grids [rows, columns, 4], each grid consists (ymin, xmin, ymax, xmax)
+    :rtype: np.ndarray
     """
     if grid_size is None and grid_num is None:
         raise ValueError("param grid_size/grid_num must be set one")
@@ -147,17 +205,27 @@ def generate_grid(panel_size,
 def seg2point(seg, max_diameter: int, min_distance, fb_threshold: float = 0.5,
               min_fore_count: int = 1, max_fore_count: int = -1,
               avg_fore_score: float = 0.55, distance_weights=(1., 1.)):
-    """ Find all valid points from segmentation
+    """
+    Find all valid points from segmentation
 
     :param seg: point object segmentation result, probability map between [0.0, 1.0]
+    :type seg: np.ndarray
     :param max_diameter: max_radius for a point
+    :type max_diameter: int
     :param min_distance: min distance between two point center
+    :type min_distance: float
     :param fb_threshold: foreground vs background threshold
+    :type fb_threshold: float
     :param min_fore_count: The minimum count of foreground pixel
+    :type min_fore_count: int
     :param max_fore_count: The maximum count of foreground pixel
+    :type max_fore_count: int
     :param avg_fore_score: The minimum average fore score of foreground
+    :type avg_fore_score: float
     :param distance_weights: distance value's weights of vertical and horizontal
+    :type distance_weights: tuple
     :return: A list of point
+    :rtype: np.ndarray
     """
     c_kernel = circle_kernel(max_diameter, dtype=np.float)
 
@@ -196,14 +264,21 @@ def seg2point(seg, max_diameter: int, min_distance, fb_threshold: float = 0.5,
 
 def seg2line(seg, fb_threshold=0.5, smooth_width=3, partition_width=20,
              partition_height=30):
-    """ Find all valid lines for segmentation
+    """
+    Find all valid lines for segmentation
 
     :param seg: point object segmentation result, probability map between [0.0, 1.0]
+    :type seg: np.ndarray
     :param fb_threshold: foreground vs background threshold
+    :type fb_threshold: float
     :param smooth_width: bin width for line x-coordinate smooth
+    :type smooth_width: float
     :param partition_width: line will split when x-coordinate interval greater than partition_width
+    :type partition_width: float
     :param partition_height: line will split when y-coordinate interval greater than partition_height
+    :type partition_height: float
     :return: a list of lines
+    :rtype: list
     """
     mask = np.greater(seg, fb_threshold)
     mask = mask.astype(np.int32)
@@ -217,7 +292,7 @@ def seg2line(seg, fb_threshold=0.5, smooth_width=3, partition_width=20,
 
     centers = []
     for i in range(width):
-        st = max(0, i - smooth_width // 2)
+        st = max(0, i - int(smooth_width // 2))
         ed = min(width, i + (smooth_width + 1) // 2)
         if mask_count[i] <= 0:
             continue

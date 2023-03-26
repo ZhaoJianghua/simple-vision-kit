@@ -26,8 +26,9 @@ from svkcore.common import get_default_font
 from svkcore.shapes import *
 
 
-def draw_points(image, points, color="red", scale=3, shape="t"):
-    """ Draw boxes on points
+def draw_points(image, points, color="red", scale=3, shape="."):
+    """
+    Draw boxes on points
 
     :param image: A PIL.Image object
     :param points: a list of points
@@ -185,7 +186,8 @@ def draw_texts(image, xys, texts, color='red', back_color=None, font_size=12,
 
 
 def draw_boxes_texts(image, boxes, texts, width=1, color='red'):
-    """ Draw boxes and its text information on image
+    """
+    Draw boxes and its text information on image
 
     :param image: A PIL.Image object
     :param boxes: A list of box
@@ -240,19 +242,28 @@ def draw_detection_result(image, boxes, classes, display_strings,
 DEFAULT_COLORS = tuple(generate_colors(99))
 
 
-def draw_annotation(image, annotation, name2cls, color_table=DEFAULT_COLORS,
+def draw_annotation(image, annotation, name2cls, color_table=None,
                     add_unknown_name=False):
     """ Draw DTAnnotation to an image
-    :param image: A PIL.Image object
+
+    :param image: A PIL.Image.Image object
+    :type image: PIL.Image.Image
     :param annotation: An instance of DTAnnotation
+    :type annotation: DTAnnotation
     :param name2cls: a dict of name to its class id number
+    :type name2cls: dict
     :param color_table: each class colors
+    :type color_table: list
     :param add_unknown_name: whether add a new name to name2cls, default is False
+    :type add_unknown_name: bool
     :return: drew image
+    :rtype: PIL.Image.Image
     """
     scale = min(image.size) / 400.
     box_width = int(math.ceil(scale))
     font_size = int(round(12*scale))
+    if color_table is None:
+        color_table = DEFAULT_COLORS
 
     for obj in annotation.objects:
         if obj.name not in name2cls:
@@ -282,6 +293,7 @@ def draw_annotation(image, annotation, name2cls, color_table=DEFAULT_COLORS,
 
 def cv2image2pil(cv2_image: np.ndarray) -> Image.Image:
     """ Convert openCV format image to PIL.Image.Image
+
     :param cv2_image: openCV format image instance
     :return: converted Image.Image instance
     """
@@ -297,6 +309,7 @@ def cv2image2pil(cv2_image: np.ndarray) -> Image.Image:
 def pil2cv2image(image: Image.Image) -> np.ndarray:
     """
     Convert PIL.Image.Image to openCV format image
+
     :param image: an instance of PIL.Image.Image
     :return: converted openCV format image
     """
@@ -318,16 +331,20 @@ def images_gallery(image_list: Union[Tuple[Image.Image], List[Image.Image]],
                    align: int = 0,
                    back_color: Union[Tuple[int], List[int], str] = "black",
                    same_scale: bool = False) -> Image.Image:
-    """ Paste a list of images into one panel for better visualize
+    r"""
+    Paste a list of images into one panel for better visualize
 
     :param image_list: A list of Image.Image instance.
     :param n_cols: Max number of images to show in each row.
-           If the number of `image_list` is less than `n_cols`,
-           `n_cols` will be set as the number of `image_list`.
+           If the number of ``image_list`` is less than ``n_cols``,
+           ``n_cols`` will be set as the number of ``image_list``.
            Default value is 6.
-    :param n_rows: Number of rows to show images. If `n_cols` is set,
-           `n_rows` will be automatically calculated by $ceil(\frac{N}{n_cols})$.
-           Otherwise `n_cols` will be automatically calculated.
+    :param n_rows: Number of rows to show images. If ``n_cols`` is set,
+           ``n_rows`` will be automatically calculated by
+
+           .. math:: ceil(\frac{N}{n\_cols})
+
+           Otherwise ``n_cols`` will be automatically calculated.
            Default value is None.
     :param cell_size: The size of cell where each image is placed in.
     :param pad: The pad width/height between two cells.

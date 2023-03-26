@@ -1,10 +1,7 @@
-svkcore.common package
+svkcore.common
 ======================
 
-Submodules
-----------
-
-svkcore.common.common module
+svkcore.common.common
 ----------------------------
 
 .. automodule:: svkcore.common.common
@@ -12,7 +9,7 @@ svkcore.common.common module
     :undoc-members:
     :show-inheritance:
 
-svkcore.common.fileio module
+svkcore.common.fileio
 ----------------------------
 
 .. automodule:: svkcore.common.fileio
@@ -20,19 +17,10 @@ svkcore.common.fileio module
     :undoc-members:
     :show-inheritance:
 
-svkcore.common.np\_ops module
+svkcore.common.np\_ops
 -----------------------------
 
 .. automodule:: svkcore.common.np_ops
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: svkcore.common
     :members:
     :undoc-members:
     :show-inheritance:
