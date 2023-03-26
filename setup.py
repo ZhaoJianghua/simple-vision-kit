@@ -30,13 +30,13 @@ packages = find_packages(where="./src")
 
 setup(
     name="svkcore",
-    version="0.0.3",
+    version="0.0.9",
     description="A simple deep computer vision toolkit",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="zjh",
     author_email="zhaojianghua1990@qq.com",
-    url="https://gitee.com/jiang_sir/simple-vision-kit",
+    url="https://github.com/ZhaoJianghua/simple-vision-kit.git",
     packages=packages,
     classifiers=classifiers,
     license_files=["LICENSE"],

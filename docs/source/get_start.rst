@@ -29,7 +29,7 @@ usage
 common
 ************
 
-* io: * load and save data more convenient
+* io: load and save data more convenient
 
 .. code-block:: python
     :linenos:
